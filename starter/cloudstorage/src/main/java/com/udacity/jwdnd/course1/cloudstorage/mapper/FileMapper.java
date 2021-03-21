@@ -2,11 +2,12 @@ package com.udacity.jwdnd.course1.cloudstorage.mapper;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
-
+@Mapper
 public interface FileMapper {
 	@Select("SELECT * FROM FILES WHERE filename = #{fileName}")
 	File getFile(String fileName);
