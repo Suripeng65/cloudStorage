@@ -38,7 +38,7 @@ public class CredentialController {
 		}else {
 			model.addAttribute("hasError", "Unable to delete credential");
 		}
-		return "credential";
+		return "result";
 	}
 	
 	@PostMapping("/credential")
@@ -49,6 +49,6 @@ public class CredentialController {
 		int userId = getUserId(authendication);
 		this.credentialService.addCredential(credential.getUrl(), credential.getUsername(), credential.getKey(), credential.getPassword());
 		model.addAttribute("success", true);
-		return "credential";
+		return "result";
 	}
 }

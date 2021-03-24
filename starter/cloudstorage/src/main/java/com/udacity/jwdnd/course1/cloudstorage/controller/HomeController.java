@@ -24,11 +24,7 @@ public class HomeController {
 	private NoteService noteService;
 	private CredentialService credentialService;
 	private EncryptionService encryptionService;
-	
-	@GetMapping()
-	public String home() {
-		return "home";
-	}
+
 	
 	public HomeController(UserService userService, FileService fileService, NoteService noteService,
 			CredentialService credentialService, EncryptionService encryptionService) {

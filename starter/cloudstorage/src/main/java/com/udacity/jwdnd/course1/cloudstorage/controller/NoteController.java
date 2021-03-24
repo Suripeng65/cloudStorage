@@ -15,7 +15,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 
 @Controller
-@RequestMapping("/note")
+@RequestMapping("/notes")
 public class NoteController {
 	
 	private NoteService noteService;
@@ -33,10 +33,10 @@ public class NoteController {
 		String username = this.userService.getUserById(userid).getUsername();
 		this.noteService.addNote(noteForm.getTitle(), noteForm.getDescription(), username);
 		model.addAttribute("success", true);
-		return "note";
+		return "result";
 	}
 	
-	@GetMapping(value = "/delete/{noteId}")
+	@GetMapping(value = "/delete-note/{noteId}")
 	public String deleteNote(
 			@PathVariable("noteId") int noteId,
 			@ModelAttribute("noteForm") NoteForm noteForm,
@@ -51,7 +51,7 @@ public class NoteController {
 			model.addAttribute("hasError", "Delete Failed!");
 			
 		}
-		return "note";
+		return "result";
 	}
 	
 }

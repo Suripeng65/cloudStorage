@@ -10,6 +10,7 @@ public class LoginController {
 
 	@GetMapping()
     public String loginView() {
+		System.out.println("get to login view");
         return "login";
     }
 	

@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +50,7 @@ public class FileService {
 	public File getFile(String fileName) {
 		return fileMapper.getFile(fileName);
 	}
-	public String[] getFileListing(int userId) {
+	public List<File> getFileListing(int userId) {
 		return fileMapper.getFileListings(userId);
 	}
 }
