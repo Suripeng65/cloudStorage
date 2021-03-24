@@ -4,12 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 
+@Service
 public class FileService {
 	private FileMapper fileMapper;
 	private UserMapper userMapper;
@@ -23,7 +25,9 @@ public class FileService {
 	public void deleteFile(File file) {
 		fileMapper.deleteFile(file.getFileName());
 	}
-	
+	public void deleteFileById(int fileId) {
+		fileMapper.deleteFileById(fileId);
+	}
 	public int addFile(MultipartFile multipartFile, String username) throws IOException {
 		InputStream fis = multipartFile.getInputStream();
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();

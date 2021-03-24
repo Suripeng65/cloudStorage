@@ -3,9 +3,12 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+import org.springframework.stereotype.Service;
+
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 
+@Service
 public class UserService {
 //	private User user;
 	private UserMapper userMapper;
@@ -28,8 +31,8 @@ public class UserService {
 	public User getUserByName(String username) {
 		return userMapper.getUserByName(username);
 	}
-	public User getUserById(String userId) {
-		return userMapper.getUserByName(userId);
+	public User getUserById(int userId) {
+		return userMapper.getUserById(userId);
 	}
 	public boolean isUserExist(String username) {
 		return userMapper.getUserByName(username) == null;

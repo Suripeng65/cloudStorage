@@ -1,10 +1,13 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
+import org.springframework.stereotype.Service;
+
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 
+@Service
 public class NoteService {
 	private NoteMapper noteMapper;
 	private UserMapper userMapper;
