@@ -5,6 +5,7 @@ import java.util.Base64;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 
@@ -26,15 +27,18 @@ public class UserService {
 		random.nextBytes(salt);
 		String encodedSalt = Base64.getEncoder().encodeToString(salt);
 		String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
-		return userMapper.insert(new User(user.getUsername(), user.getSalt(), hashedPassword, user.getfirstName(), user.getlastName()));
+		return userMapper.insert(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getfirstName(), user.getlastName()));
 	}
 	public User getUserByName(String username) {
 		return userMapper.getUserByName(username);
 	}
-	public User getUserById(int userId) {
+	public User getUserById(Integer userId) {
 		return userMapper.getUserById(userId);
 	}
 	public boolean isUserExist(String username) {
 		return userMapper.getUserByName(username) == null;
+	}
+	public List<User> getAllUsers(){
+		return userMapper.getAllUsers();
 	}
 }
