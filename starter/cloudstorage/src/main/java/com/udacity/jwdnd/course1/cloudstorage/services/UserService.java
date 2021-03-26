@@ -38,7 +38,9 @@ public class UserService {
 	public boolean isUserExist(String username) {
 		return userMapper.getUserByName(username) == null;
 	}
+	
 	public List<User> getAllUsers(){
 		return userMapper.getAllUsers();
 	}
+
 }

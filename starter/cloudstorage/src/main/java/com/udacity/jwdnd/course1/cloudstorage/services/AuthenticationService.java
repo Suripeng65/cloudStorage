@@ -30,6 +30,7 @@ public class AuthenticationService implements AuthenticationProvider{
 		System.out.println("authentication username" + password);
 
 		User user = this.userMapper.getUserByName(username);
+
 		System.out.println("authentication user" + user);
 		
 		if(user != null) {
