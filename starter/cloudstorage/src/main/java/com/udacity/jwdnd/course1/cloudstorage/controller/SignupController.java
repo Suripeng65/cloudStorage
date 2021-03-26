@@ -32,9 +32,9 @@ public class SignupController {
 		 int row = userService.addUser(user);
          System.out.println(row);
          System.out.println(user.getUsername());
-         System.out.println(userService.isUserExist(user.getUsername()));
+         System.out.println(userService.isUsernameAvailable(user.getUsername()));
 //		check if user has already signed up
-		if (userService.isUserExist(user.getUsername())) {
+		if (!userService.isUsernameAvailable(user.getUsername())) {
             signupError = "The username already exists.";
         }
 // if user doesnt exist in database, sign user up!

@@ -35,7 +35,8 @@ public class UserService {
 	public User getUserById(Integer userId) {
 		return userMapper.getUserById(userId);
 	}
-	public boolean isUserExist(String username) {
+	public boolean isUsernameAvailable(String username) {
+		System.out.println("isUsernameAvailable "+userMapper.getUserByName(username));
 		return userMapper.getUserByName(username) == null;
 	}
 	
