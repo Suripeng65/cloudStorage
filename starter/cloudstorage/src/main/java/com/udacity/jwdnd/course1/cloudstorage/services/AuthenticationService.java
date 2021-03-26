@@ -18,7 +18,6 @@ public class AuthenticationService implements AuthenticationProvider{
 	private HashService hashService;
 	
 	public AuthenticationService(UserMapper userMapper, HashService hashService) {
-		super();
 		this.userMapper = userMapper;
 		this.hashService = hashService;
 	}
@@ -27,8 +26,12 @@ public class AuthenticationService implements AuthenticationProvider{
 	public Authentication authenticate(Authentication authentication) throws AuthenticationServiceException{
 		String username = authentication.getName();
 		String password = authentication.getCredentials().toString();
+		System.out.println("authentication username" + username);
+		System.out.println("authentication username" + password);
+
+		User user = userMapper.getUserByName(username);
+		System.out.println("authentication user" + user);
 		
-		User user = this.userMapper.getUserByName(username);
 		if(user != null) {
 			String encodedSalt = user.getSalt();
 			String hashedPassword = hashService.getHashedValue(password, encodedSalt);
@@ -42,8 +45,7 @@ public class AuthenticationService implements AuthenticationProvider{
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		// TODO Auto-generated method stub
-		return false;
+		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
 	
 }
