@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 
@@ -26,13 +27,7 @@ public class FileController {
 		this.userService = userService;
 	}
 	
-	private int getUserId( Authentication authentication ) {
-		String username = authentication.getName();
-		return this.userService.getUserByName(username).getuserId();
-	}
-	private String getUserName( Authentication authentication) {
-		return authentication.getName();
-	}
+
 	@GetMapping("/delete/{fileId}")
 	public String deleteFile(@PathVariable("fileId") int fileId, Model model) {
 		if(fileId > 0) {
@@ -46,29 +41,25 @@ public class FileController {
 	}
 	
 	@PostMapping("/upload-file")
-	public String uploadFile( @RequestParam("fileUpload") MultipartFile fileUpload, Authentication authentication, Model model) {
+	public String uploadFile( MultipartFile fileUpload, Authentication authentication, Model model) {
 		String uploadError = null;
-		int userid = getUserId(authentication);
-		String username = getUserName(authentication);
+		User user = this.userService.getUserByName(authentication.getName());
 		String fileName = fileUpload.getOriginalFilename();
+		
 		if(fileUpload.isEmpty()) {
 			uploadError = "Empty file!";
-		}else if(this.fileService.getFile(fileUpload.getName()) !=  null) {
+			return "redirect:/result?error";
+		}else if(this.fileService.getFile(fileName) !=  null) {
 			uploadError = "File already exists!";
 		}else {
 			try {
-				this.fileService.addFile(fileUpload, username);
+				this.fileService.addFile(fileUpload, user.getuserId());
 			}catch(IOException e){
 				e.printStackTrace();
 			}
 		}
 		
-		if(uploadError == null) {
-			model.addAttribute("success", true);
-		}else {
-			model.addAttribute("hasError", uploadError);
-		}
-		return "result";
+		return "redirect:/result?success";
 	}
 	
 }

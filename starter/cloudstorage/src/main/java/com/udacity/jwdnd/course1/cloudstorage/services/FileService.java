@@ -29,22 +29,22 @@ public class FileService {
 	public void deleteFileById(int fileId) {
 		fileMapper.deleteFileById(fileId);
 	}
-	public int addFile(MultipartFile multipartFile, String username) throws IOException {
-		InputStream fis = multipartFile.getInputStream();
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int nRead;
-        byte[] data = new byte[1024];
-        while ((nRead = fis.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, nRead);
-        }
-        buffer.flush();
-        byte[] fileData = buffer.toByteArray();
+	public int addFile(MultipartFile multipartFile, Integer userid) throws IOException {
+//		InputStream fis = multipartFile.getInputStream();
+//        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+//        int nRead;
+//        byte[] data = new byte[1024];
+//        while ((nRead = fis.read(data, 0, data.length)) != -1) {
+//            buffer.write(data, 0, nRead);
+//        }
+//        buffer.flush();
+//        byte[] fileData = buffer.toByteArray();
 
         String fileName = multipartFile.getOriginalFilename();
         String contentType = multipartFile.getContentType();
         String fileSize = String.valueOf(multipartFile.getSize());
-        Integer userId = userMapper.getUserByName(username).getuserId();
-		return fileMapper.insert(new File(0, fileName, contentType, fileSize, userId, fileData));
+        File file = new File(null, fileName, contentType, fileSize, userid, multipartFile.getBytes());
+		return fileMapper.insert(file, userid);
 	}
 	
 	public File getFile(String fileName) {

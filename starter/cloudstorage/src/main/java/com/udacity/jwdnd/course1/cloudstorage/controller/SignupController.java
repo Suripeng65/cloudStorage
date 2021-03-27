@@ -27,12 +27,7 @@ public class SignupController {
 	@PostMapping()
 	public String signup(@ModelAttribute User user, Model model, RedirectAttributes redirectAttributes) {
 		String signupError = null;
-		System.out.println("get to post signup");
-		System.out.println(this.userService.getAllUsers());
-		 int row = userService.addUser(user);
-         System.out.println(row);
-         System.out.println(user.getUsername());
-         System.out.println(userService.isUsernameAvailable(user.getUsername()));
+
 //		check if user has already signed up
 		if (!userService.isUsernameAvailable(user.getUsername())) {
             signupError = "The username already exists.";

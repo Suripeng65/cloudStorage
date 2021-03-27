@@ -1,14 +1,14 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
 public class File {
-	private int fileId;
+	private Integer fileId;
 	private String fileName;
 	private String contentType;
 	private String fileSize;
-	private int userId;
+	private Integer userId;
 	private byte[] fileData;
 	
-	public File(int fileId, String fileName, String contentType, String fileSize, int userId, byte[] fileData) {
+	public File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, byte[] fileData) {
 		super();
 		this.fileId = fileId;
 		this.fileName = fileName;
@@ -18,7 +18,7 @@ public class File {
 		this.fileData = fileData;
 	}
 	
-	public int getFileId() {
+	public Integer getFileId() {
 		return fileId;
 	}
 	public void setFileId(int fileId) {
@@ -42,7 +42,7 @@ public class File {
 	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
 	}
-	public int getUserId() {
+	public Integer getUserId() {
 		return userId;
 	}
 	public void setUserId(int userId) {

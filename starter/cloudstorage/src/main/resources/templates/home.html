@@ -59,7 +59,7 @@
                                         <a target="_blank" class="btn btn-success" th:href="@{/files/download/{fileId}(fileId=${file.fileId})}">View</a>
                                         <a  class="btn btn-danger" th:href="@{file/delete/{fileId}(fileId=${file.fileId})">Delete</a>
                                     </td>
-                                    <th scope="row" th:text="${file.fileName}"></th>
+                                    <th scope="row" th:text="${file.getFileName()}">text</th>
                                 </tr>
                                 </tbody>
                             </table>
@@ -73,16 +73,16 @@
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
                                 <thead>
-                                    <tr th:each="note:${noteList}">
+                                    <tr >
                                         <th style="width: 20%" scope="col"></th>
                                         <th style="width: 20%" scope="col" >Title</th>
                                         <th style="width: 60%" scope="col" >Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr th:each="note:${noteList}">
                                         <td>
-                                            <button type="button" class="btn btn-success" th:onClick="editNote([[$(note)]])">Edit</button>
+                                             <button id="edit-note" type="button" class="btn btn-success" th:onClick="editNote([[$(note)]])">Edit</button> 
                                             <a class="btn btn-danger" th:href=@{/notes/delete-note/{noteId}(noteId=${note.noteId})}>Delete</a>
                                         </td>
                                         <th th:text="${note.title}"></th>
@@ -139,14 +139,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
+                                <tr th:each="credential:${credentialList}">
                                     <td>
-                                        <button type="button" class="btn btn-success">Edit</button>
-                                        <a class="btn btn-danger">Delete</a>
+                                        <button id="edit-credential" type="button" class="btn btn-success" th:onClick="editCredential([[$(credential)]])">Edit</button>
+                                        <a class="btn btn-danger" th:href="@{/credentials/delete/{credentialId}(credentialId=${credential.credentialId})}">Delete</a>
                                     </td>
-                                    <th scope="row">Example Credential URL</th>
-                                    <td>Example Credential Username</td>
-                                    <td>Example Credential Password</td>
+                                    <th scope="row" th:text="${credential.url}"></th>
+                                    <td th:text="${credential.username}"></td>
+                                    <td th:text="${credential.password}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -218,6 +218,12 @@
             	$("#note-title").val(note.title);
             	$("#note-description").val(note.description);
             	$('#noteModal').modal('show')
+            }
+            function editCredential(credential){
+            	$("#credential-url").val(credential.credentialId);
+            	$("#credential-username").val(credential.username)
+            	$("#credential-password").val(credential.password);
+            	$('#credentialModal').modal('show');
             }
         </script>
     </body>

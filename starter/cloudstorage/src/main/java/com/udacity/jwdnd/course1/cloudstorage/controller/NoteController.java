@@ -21,19 +21,30 @@ public class NoteController {
 	private NoteService noteService;
 	private UserService userService;
 	
+	public NoteController(NoteService noteService, UserService userService) {
+		super();
+		this.noteService = noteService;
+		this.userService = userService;
+	}
+
 	private int getUserId(Authentication authentication){
 		String username = authentication.getName();
 		return this.userService.getUserByName(username).getuserId();
 	}
 	
 	@PostMapping("/note")
-	public String addNote(@ModelAttribute("noteForm") NoteForm noteForm, Authentication authentication,
+	public String addNote(Note note, Authentication authentication,
 			Model model) {
-		int userid = getUserId(authentication);
-		String username = this.userService.getUserById(userid).getUsername();
-		this.noteService.addNote(noteForm.getTitle(), noteForm.getDescription(), username);
-		model.addAttribute("success", true);
-		return "result";
+//		int userid = getUserId(authentication);
+		if(note.getNoteId() != null) {
+			noteService.updateNote(note);
+		}else {
+			String username = authentication.getName();
+			noteService.addNote(note.getNoteTitle(), note.getNoteDescription(), username);
+		}
+//		
+//		model.addAttribute("success", true);
+		return "redirect:/result?success";
 	}
 	
 	@GetMapping(value = "/delete-note/{noteId}")

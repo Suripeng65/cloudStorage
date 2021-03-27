@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,12 +18,17 @@ import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 
 @Controller
-@RequestMapping("/home")
+//@RequestMapping("/home")
 public class HomeController {
+	@Autowired
 	private UserService userService;
+	@Autowired
 	private FileService fileService;
+	@Autowired
 	private NoteService noteService;
+	@Autowired
 	private CredentialService credentialService;
+	@Autowired
 	private EncryptionService encryptionService;
 
 	
@@ -39,7 +45,7 @@ public class HomeController {
 		String username = authentication.getName();
 		return this.userService.getUserByName(username).getuserId();
 	}
-	@GetMapping()
+	@GetMapping("/home")
 	public String getHomePage(
 			@ModelAttribute("note") Note note, 
 			@ModelAttribute("credential") Credential credential, 
@@ -53,4 +59,9 @@ public class HomeController {
 		
 		return "home";
 	}
+
+    @GetMapping("/result")
+    public String showResult() {
+        return "result";
+    }
 }
