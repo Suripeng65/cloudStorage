@@ -44,7 +44,7 @@ public class FileService {
         String contentType = multipartFile.getContentType();
         String fileSize = String.valueOf(multipartFile.getSize());
         File file = new File(null, fileName, contentType, fileSize, userid, multipartFile.getBytes());
-		return fileMapper.insert(file, userid);
+		return fileMapper.insert(file);
 	}
 	
 	public File getFile(String fileName) {
@@ -52,5 +52,9 @@ public class FileService {
 	}
 	public List<File> getFileListing(int userId) {
 		return fileMapper.getFileListings(userId);
+	}
+
+	public File getFileById(Integer id) {
+		return this.fileMapper.getFileById(id);
 	}
 }
