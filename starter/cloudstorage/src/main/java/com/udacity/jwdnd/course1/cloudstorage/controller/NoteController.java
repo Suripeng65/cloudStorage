@@ -90,9 +90,12 @@ public class NoteController {
 		return "redirect:/home";
 	}
 
-    @PutMapping("/update")
-    public String updateNote(@ModelAttribute Note note, Authentication authentication) {
-        System.out.println(note.getNoteId());
+    @PostMapping("/update")
+    public String updateNote(
+    		@ModelAttribute Note note, 
+    		Authentication authentication) {
+    	System.out.println("hit update endpoint");
+    	System.out.println(note.getNoteTitle());
         noteService.updateNote(note, authentication.getName());
         return "redirect:/home";
     }
