@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 
@@ -33,15 +34,18 @@ public class NoteController {
 	}
 	
 	@PostMapping("/note")
-	public String addNote(Note note, Authentication authentication,
+	public String addNote(@ModelAttribute("note") Note note, Authentication authentication,
 			Model model) {
+		noteService.addNote(note, authentication.getName());
 //		int userid = getUserId(authentication);
-		if(note.getNoteId() != null) {
-			noteService.updateNote(note);
-		}else {
-			String username = authentication.getName();
-			noteService.addNote(note.getNoteTitle(), note.getNoteDescription(), username);
-		}
+//		User user = this.userService.getUserByName(authentication.getName());
+//		if(note.getNoteId() != null) {
+//			noteService.updateNote(note);
+//		}else {
+//			String username = authentication.getName();
+//			noteService.addNote(note.getNoteTitle(), note.getNoteDescription(), username);
+//			model.addAttribute("note", noteService.getNoteListByUser(user.getuserId()));
+//		}
 //		
 //		model.addAttribute("success", true);
 		return "redirect:/result?success";
@@ -50,7 +54,7 @@ public class NoteController {
 	@GetMapping(value = "/delete-note/{noteId}")
 	public String deleteNote(
 			@PathVariable("noteId") int noteId,
-			@ModelAttribute("noteForm") NoteForm noteForm,
+			@ModelAttribute("note") Note note,
 			Authentication authentication,
 			Model model
 			) {

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet">
+    <title th:text="${pageTitle}"></title>
+    <style>
+        .error{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Oswald', sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="p-3 mb-2 bg-light text-black">
+    <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
+        <div class="error alert alert-danger">
+            <i class="far fa-frown" style="font-size: 5em; margin-bottom: 10px"></i>
+            <h1 style="font-size: 4em">404</h1>
+            <h1 style="font-size: 4em">Page Not Found</h1>
+            <span style="font-size: 1em">Click <a th:href="@{/home}">here</a> to continue.</span>
+        </div>
+    </div>
+</body>
+</html>

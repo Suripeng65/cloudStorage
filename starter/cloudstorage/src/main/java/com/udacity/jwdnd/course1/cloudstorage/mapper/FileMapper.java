@@ -24,7 +24,7 @@ public interface FileMapper {
     @Select("SELECT filename FROM FILES WHERE username = #{userName}")
     List<File> getFileListbyUserName(String userName);
 	
-    @Insert("INSERT INTO FILES (filename, filesize, contenttype, filedata, userid) VALUES (#{file.fileName}, #{file.fileSize}, #{file.contentType}, #{file.fileData}, #{file.userId})")
+    @Insert("INSERT INTO FILES (filename, filesize, contenttype, filedata, userid) VALUES (#{fileName}, #{fileSize}, #{contentType}, #{fileData}, #{userId})")
     int insert(File file, int userid);
 
 	

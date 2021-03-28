@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialMapper;
@@ -9,32 +11,37 @@ import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 @Service
 public class CredentialService {
 	private CredentialMapper credentialMapper;
-	private UserMapper userMapper;
+	private EncryptionService encryptionService;
+	private UserService userService;
 	
-	public CredentialService(CredentialMapper credentialMapper, UserMapper userMapper) {
+	public CredentialService(CredentialMapper credentialMapper, UserService userService, EncryptionService encryptionService) {
 		super();
 		this.credentialMapper = credentialMapper;
-		this.userMapper = userMapper;
+		this.userService = userService;
+		this.encryptionService = encryptionService;
 	}
 
-	public Credential[] getCredentialListByUser(int userId) {
-		return this.credentialMapper.getCredentialsByUser(userId);
+	public List<Credential> getCredentialListByUser(String username) {
+		return this.credentialMapper.getCredentialsByUser(userService.getUserByName(username).getuserId());
 	}
 	
-	public Credential getCredential(int credentialId) {
-		return this.credentialMapper.getCredential(credentialId);
+	
+	public void addCredential(Credential credential, String username) {
+	  String key = encryptionService.generateKey();
+        String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), key);
+		int userId = this.userService.getUserByName(username).getuserId();
+		credential.setUserId(userId);
+        credential.setPassword(encryptedPassword);
+        credential.setKey(key);
+        credentialMapper.insert(credential);
+	}
+	public void deleteCredential(Credential credential) {
+		this.credentialMapper.deleteCredential(credential.getCredentialId());
 	}
 	
-	public void addCredential(String url, String username, String key, String password) {
-		int userId = this.userMapper.getUserByName(username).getuserId();
-		Credential credential = new Credential(0, url, username, key, password, userId);
-		this.credentialMapper.insert(credential);
-	}
-	public void deleteCredential(int credentialId) {
-		this.credentialMapper.deleteCredential(credentialId);
-	}
-	
-	public void updateCredential(int credentialId, String newUserName, String url, String key, String password) {
-		this.credentialMapper.updateCredential(credentialId, newUserName, url, key, password);
+	public void updateCredential(Credential credential) {
+		String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), credential.getKey());
+        credential.setPassword(encryptedPassword);
+        credentialMapper.updateCredentials(credential);
 	}
 }

@@ -54,8 +54,8 @@ public class HomeController {
 		int userId = getUserId(authentication);
 		model.addAttribute("fileList", this.fileService.getFileListing(userId));
 		model.addAttribute("noteList", this.noteService.getNoteListByUser(userId));
-		model.addAttribute("credentialList", this.credentialService.getCredentialListByUser(userId));
-		model.addAttribute("encryptionService", encryptionService);
+		model.addAttribute("credentialList", this.credentialService.getCredentialListByUser(authentication.getName()));
+		model.addAttribute("encryption", encryptionService);
 		
 		return "home";
 	}

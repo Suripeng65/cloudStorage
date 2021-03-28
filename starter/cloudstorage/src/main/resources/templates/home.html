@@ -82,11 +82,17 @@
                                 <tbody>
                                     <tr th:each="note:${noteList}">
                                         <td>
-                                             <button id="edit-note" type="button" class="btn btn-success" th:onClick="editNote([[$(note)]])">Edit</button> 
+                                             <button id="edit-note" type="button" class="btn btn-success" 
+                                                th:noteId="${note.noteId}"
+		                                        th:title="${note.noteTitle}"
+		                                        th:message="${note.noteDescription}"
+                                             	onClick="editNote(this.getAttribute('noteId'),
+			                                    this.getAttribute('noteTitle'),
+			                                    this.getAttribute('noteDescription'))">Edit</button> 
                                             <a class="btn btn-danger" th:href=@{/notes/delete-note/{noteId}(noteId=${note.noteId})}>Delete</a>
                                         </td>
-                                        <th th:text="${note.title}"></th>
-                                        <td th:text="${note.description}">Example Note Description </td>
+                                        <th th:text="${note.noteTitle}"></th>
+                                        <td th:text="${note.noteDescription}">Example Note Description </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -141,7 +147,18 @@
                                 <tbody>
                                 <tr th:each="credential:${credentialList}">
                                     <td>
-                                        <button id="edit-credential" type="button" class="btn btn-success" th:onClick="editCredential([[$(credential)]])">Edit</button>
+                                        <button id="edit-credential" type="button" class="btn btn-success" 
+                                        th:credentialId="${credential.credentialId}"
+                                        th:url="${credential.url}"
+                                        th:username="${credential.username}"
+                                        th:password="${encryption.decryptValue(credential.password, credential.key)}"
+                                        th:credentialKey="${credential.key}"
+                                        onClick="editCredential(
+                                       		this.getAttribute('credentialId'),
+                                            this.getAttribute('url'),
+                                            this.getAttribute('username'),
+                                            this.getAttribute('password'),
+                                            this.getAttribute('credentialKey'))">Edit</button>
                                         <a class="btn btn-danger" th:href="@{/credentials/delete/{credentialId}(credentialId=${credential.credentialId})}">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.url}"></th>
@@ -162,7 +179,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
+                                        <form action="#" method="POST" th:action="@{/credentials}" >
                                             <input type="hidden" name="credentialId" id="credential-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
@@ -213,17 +230,19 @@
                 $('#credential-password').val(password ? password : '');
                 $('#credentialModal').modal('show');
             }
-            function editNote(note){
-            	$("#note-id").val(note.noteId);
-            	$("#note-title").val(note.title);
-            	$("#note-description").val(note.description);
+            function editNote(noteId, noteTitle, noteDescription){
+            	$("#note-id").val(nodeId ? nodeId : '');
+            	$("#note-title").val(noteTitle ? noteTitle : '');
+            	$("#note-description").val(noteMessage ? noteMessage : '');
             	$('#noteModal').modal('show')
             }
-            function editCredential(credential){
-            	$("#credential-url").val(credential.credentialId);
-            	$("#credential-username").val(credential.username)
-            	$("#credential-password").val(credential.password);
-            	$('#credentialModal').modal('show');
+            function editCredential(credentialId, url, username, password, credentialKey){
+                $('#editCredential-id').val(credentialId ? credentialId : '');
+                $('#editCredential-url').val(url ? url : '');
+                $('#editCredential-username').val(username ? username : '');
+                $('#editCredential-password').val(password ? password : '');
+                $('#editCredential-key').val(credentialKey ? credentialKey : '');
+                $('#editCredentialModal').modal('show');
             }
         </script>
     </body>

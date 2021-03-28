@@ -13,10 +13,12 @@ import com.udacity.jwdnd.course1.cloudstorage.model.User;
 public class NoteService {
 	private NoteMapper noteMapper;
 	private UserMapper userMapper;
-	public NoteService(NoteMapper noteMapper, UserMapper userMapper) {
+	private UserService userService;
+	public NoteService(NoteMapper noteMapper, UserService userService, UserMapper userMapper) {
 		super();
 		this.noteMapper = noteMapper;
 		this.userMapper = userMapper;
+		this.userService = userService;
 	}
 	
 	public void deleteNote(int noteId) {
@@ -32,11 +34,9 @@ public class NoteService {
 		return this.noteMapper.getNoteListForUser(userId);
 	}
 	
-	public int addNote(String title, String description, String userName) {
-        int userId = userMapper.getUserByName(userName).getuserId();
-        Note note = new Note(0, title, description, userId);
-        
-		return this.noteMapper.insert(note);
+	public void addNote(Note note, String userName) {
+        note.setUserId(userService.getUserByName(userName).getuserId());
+        noteMapper.insert(note);
 	}
 	
 	public Note getNoteById(int noteId) {
