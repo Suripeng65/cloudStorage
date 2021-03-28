@@ -35,8 +35,8 @@ public class CredentialService {
         credential.setKey(key);
         credentialMapper.insert(credential);
 	}
-	public void deleteCredential(Credential credential) {
-		this.credentialMapper.deleteCredential(credential.getCredentialId());
+	public void deleteCredential(int credentialId) {
+		this.credentialMapper.deleteCredential(credentialId);
 	}
 	
 	public void updateCredential(Credential credential) {

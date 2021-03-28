@@ -85,17 +85,18 @@
                                         <th style="width: 60%" scope="col" >Description</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr th:each="note:${noteList}">
+                                <tbody th:each="note:${noteList}">
+                                    <tr >
                                         <td>
                                              <button id="edit-note" type="button" class="btn btn-success" 
                                                 th:noteId="${note.noteId}"
 		                                        th:title="${note.noteTitle}"
 		                                        th:message="${note.noteDescription}"
-                                             	onClick="editNote(this.getAttribute('noteId'),
+                                             	onClick="showUpdateNoteModal(
+                                            	this.getAttribute('noteId'),
 			                                    this.getAttribute('noteTitle'),
 			                                    this.getAttribute('noteDescription'))">Edit</button> 
-                                            <a class="btn btn-danger" th:href=@{/notes/delete-note/{noteId}(noteId=${note.noteId})}>Delete</a>
+                                             <a  class="btn btn-danger" th:href="@{/notes/delete/{noteId}(noteId=${note.noteId})}">Delete</a>
                                         </td>
                                         <th th:text="${note.noteTitle}"></th>
                                         <td th:text="${note.noteDescription}">Example Note Description </td>
@@ -103,7 +104,9 @@
                                 </tbody>
                             </table>
                         </div>
-
+                		<!-- update note modal -->
+                		<div th:insert="/editNote :: editNote"></div>
+                		<!-- create note modal -->
                         <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -114,7 +117,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST" th:action="@{/notes/note}">
+                                        <form action="#" th:method="POST" th:action="@{/notes/note}">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
@@ -237,6 +240,7 @@
                 $('#credentialModal').modal('show');
             }
             function editNote(noteId, noteTitle, noteDescription){
+            	console.log("edit note")
             	$("#note-id").val(nodeId ? nodeId : '');
             	$("#note-title").val(noteTitle ? noteTitle : '');
             	$("#note-description").val(noteMessage ? noteMessage : '');
@@ -249,6 +253,18 @@
                 $('#editCredential-password').val(password ? password : '');
                 $('#editCredential-key').val(credentialKey ? credentialKey : '');
                 $('#editCredentialModal').modal('show');
+            }
+     
+            function showDeleteNoteModal(noteId) {
+                $('#deleteNoteId').val(noteId ? noteId : '');
+                $('#deleteNoteModal').modal('show');
+            }
+            
+            function showUpdateNoteModal(nodeId, noteTitle, noteMessage) {
+                $('#editNoteId').val(nodeId ? nodeId : '');
+                $('#editNoteTitle').val(noteTitle ? noteTitle : '');
+                $('#editNoteDescription').val(noteMessage ? noteMessage : '');
+                $('#editNoteModal').modal('show');
             }
         </script>
     </body>

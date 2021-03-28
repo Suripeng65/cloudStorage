@@ -7,7 +7,6 @@ public class Note {
 	private Integer userId;
 	
 	public Note(Integer noteId, String noteTitle, String noteDescription, Integer userId) {
-		super();
 		this.noteId = noteId;
 		this.noteTitle = noteTitle;
 		this.noteDescription = noteDescription;

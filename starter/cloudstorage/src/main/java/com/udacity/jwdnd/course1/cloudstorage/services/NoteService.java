@@ -25,8 +25,9 @@ public class NoteService {
 		this.noteMapper.deleteNote(noteId);
 	}
 	
-	public void updateNote(Note note) {
-		this.noteMapper.updateNote(note.getUserId(),note.getNoteTitle(), note.getNoteDescription());
+	public void updateNote(Note note, String username) {
+		note.setUserId(userService.getUserByName(username).getuserId());
+		this.noteMapper.updateNote(note);
 //		this.noteMapper.updateNote(noteId, title, description);
 	}
 	

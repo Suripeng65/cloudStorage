@@ -3,11 +3,14 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.NoteForm;
@@ -50,23 +53,48 @@ public class NoteController {
 //		model.addAttribute("success", true);
 		return "redirect:/result?success";
 	}
-	
-	@GetMapping(value = "/delete-note/{noteId}")
+//	
+//	@GetMapping(value = "/delete-note/{noteId}")
+//	public String deleteNote(
+//			@PathVariable("noteId") int noteId,
+//			@ModelAttribute("note") Note note,
+//			Authentication authentication,
+//			Model model
+//			) {
+//		if(noteId >0) {
+//			this.noteService.deleteNote(noteId);
+//			model.addAttribute("success", true);
+//			return "note";
+//		}else {
+//			model.addAttribute("hasError", "Delete Failed!");
+//			
+//		}
+//		return "result";
+//	}
+//	
+	@GetMapping("/delete/{noteId}")
 	public String deleteNote(
-			@PathVariable("noteId") int noteId,
-			@ModelAttribute("note") Note note,
+			@PathVariable int noteId, 
+			@ModelAttribute Note note,
 			Authentication authentication,
-			Model model
+			RedirectAttributes redirectAttributes
 			) {
-		if(noteId >0) {
-			this.noteService.deleteNote(noteId);
-			model.addAttribute("success", true);
-			return "note";
-		}else {
-			model.addAttribute("hasError", "Delete Failed!");
-			
-		}
-		return "result";
+		try {
+			noteService.deleteNote(noteId);		
+			redirectAttributes.addFlashAttribute("success", true);
+			redirectAttributes.addFlashAttribute("successMessage", "Note Deleted");
+		}catch (Exception e) {
+            redirectAttributes.addFlashAttribute("ifError", true);
+            redirectAttributes.addFlashAttribute("errorMessage", "System error!" + e.getMessage());
+        }
+		return "redirect:/home";
 	}
+
+    @PutMapping("/update")
+    public String updateNote(@ModelAttribute Note note, Authentication authentication) {
+        System.out.println(note.getNoteId());
+        noteService.updateNote(note, authentication.getName());
+        return "redirect:/home";
+    }
 	
 }

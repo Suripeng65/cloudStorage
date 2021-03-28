@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 
@@ -26,12 +28,25 @@ public class CredentialController {
 		this.credentialService = credentialService;
 	}
 	
+	
+	@GetMapping("/delete/{credentialId}")
+	public String deleteCredential(
+			@PathVariable int credentialId, 
+			@ModelAttribute Credential credential,
+			Authentication authentication,
+			RedirectAttributes redirectAttributes
+			) {
+		try {
+			credentialService.deleteCredential(credentialId);		
+			redirectAttributes.addFlashAttribute("success", true);
+			redirectAttributes.addFlashAttribute("successMessage", "Credential Deleted");
+		}catch (Exception e) {
+            redirectAttributes.addFlashAttribute("ifError", true);
+            redirectAttributes.addFlashAttribute("errorMessage", "System error!" + e.getMessage());
+        }
+		return "redirect:/home";
+	}
 
-    @DeleteMapping()
-    public String deleteCredential(@ModelAttribute Credential credential) {
-        credentialService.deleteCredential(credential);
-        return "redirect:/home";
-    }
 
     @PutMapping()
     public String updateCredentials(@ModelAttribute Credential credential) {
