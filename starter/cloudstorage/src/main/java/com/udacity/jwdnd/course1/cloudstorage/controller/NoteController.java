@@ -51,7 +51,7 @@ public class NoteController {
 //		}
 //		
 //		model.addAttribute("success", true);
-		return "redirect:/result?success";
+		return "redirect:/home";
 	}
 //	
 //	@GetMapping(value = "/delete-note/{noteId}")
