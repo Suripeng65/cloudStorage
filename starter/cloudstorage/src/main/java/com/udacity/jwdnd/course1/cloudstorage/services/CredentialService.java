@@ -39,7 +39,9 @@ public class CredentialService {
 		this.credentialMapper.deleteCredential(credentialId);
 	}
 	
-	public void updateCredential(Credential credential) {
+	public void updateCredential(Credential credential, String username) {
+		credential.setUserId(userService.getUserByName(username).getuserId());
+		System.out.println(credential.getKey());
 		String encryptedPassword = encryptionService.encryptValue(credential.getPassword(), credential.getKey());
         credential.setPassword(encryptedPassword);
         credentialMapper.updateCredentials(credential);

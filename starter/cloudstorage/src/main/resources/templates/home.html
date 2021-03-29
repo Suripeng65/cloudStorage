@@ -117,11 +117,11 @@
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
-                                                <input type="text" name= "noteTitleUpdate" class="form-control" id="note-update-title" maxlength="20">
+                                                <input type="text" name= "noteTitle" class="form-control" id="note-update-title" maxlength="20">
                                             </div>
                                             <div class="form-group">
                                                 <label for="note-description" class="col-form-label">Description</label>
-                                                <textarea class="form-control" name="noteDescriptionUpdate" id="note-update-description" rows="5" maxlength="1000"></textarea>
+                                                <textarea class="form-control" name="noteDescription" id="note-update-description" rows="5" maxlength="1000"></textarea>
                                             </div>
                                             <button id="noteUpdateSubmit" type="submit" class="d-none"></button>
                                         </form>
@@ -171,13 +171,14 @@
                         </button>
 
                         <div class="table-responsive">
-                            <table class="table table-striped" th:object="${credentials}" id="credentialTable">
+                            <table class="table table-striped" id="credentialTable">
                                 <thead>
                                     <tr>
                                         <th style="width: 20%" scope="col"></th>
                                         <th style="width: 35%" scope="col">URL</th>
                                         <th style="width: 20%" scope="col">Username</th>
                                         <th style="width: 25%" scope="col">Password</th>
+                                         <th style="width: 25%" scope="col">Password</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -188,23 +189,18 @@
                                         th:url="${credential.url}"
                                         th:username="${credential.username}"
                                         th:password="${encryption.decryptValue(credential.password, credential.key)}"
-                                        th:credentialKey="${credential.key}"
-                                        onClick="editCredential(
-                                       		this.getAttribute('credentialId'),
-                                            this.getAttribute('url'),
-                                            this.getAttribute('username'),
-                                            this.getAttribute('password'),
-                                            this.getAttribute('credentialKey'))">Edit</button>
+                                        th:attr="onclick=|showUpdateCredentialModal('${credential.credentialId}','${credential.url}','${credential.username}','${encryption.decryptValue(credential.password, credential.key)}')|">Edit</button>
                                         <a class="btn btn-danger" th:href="@{/credentials/delete/{credentialId}(credentialId=${credential.credentialId})}">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.url}"></th>
                                     <td th:text="${credential.username}"></td>
                                     <td th:text="${credential.password}"></td>
+                                     <td th:text="${credential.key}"></td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
-
+						<!-- Create credential modal -->
                         <div class="modal fade" id="credentialModal" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -216,7 +212,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <form action="#" method="POST" th:action="@{/credentials}" >
-                                            <input type="hidden" name="credentialId" id="credential-id">
+                                            <input type="hidden" name="credentialId" id="credential-id">                                            
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>
@@ -235,6 +231,42 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-primary" onclick="$('#credentialSubmit').click();">Save changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Update credential modal -->
+       		            <div class="modal fade" id="credentialModalUpdate" tabindex="-1" role="dialog" aria-labelledby="credentialModalLabelUpdate" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="credentialModalLabelUpdate">Credential</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="#" method="POST" th:action="@{/credentials/update}" th:object="${credential}">
+                                            <input type="hidden" name="credentialId" id="credential-id-update">
+                                            <div class="form-group">
+                                                <label for="note-title" class="col-form-label">URL</label>
+                                                <input type="text" name= "url" class="form-control" id="credential-url-update" maxlength="100">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="note-title" class="col-form-label">Username</label>
+                                                <input type="text" name= "username" class="form-control" id="credential-username-update" maxlength="30">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="note-title" class="col-form-label">Password</label>
+                                                <input type="text" name= "password" class="form-control" id="credential-password-update" maxlength="30">
+                                            </div>
+                                            <button id="credentialSubmitUpdate" type="submit" class="d-none"></button>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary" onclick="$('#credentialSubmitUpdate').click();">Save changes</button>
                                     </div>
                                 </div>
                             </div>
@@ -273,14 +305,14 @@
             	$("#note-description").val(noteMessage ? noteMessage : '');
             	$('#noteModal').modal('show')
             }
-            function editCredential(credentialId, url, username, password, credentialKey){
+/*             function editCredential(credentialId, url, username, password, credentialKey){
                 $('#editCredential-id').val(credentialId ? credentialId : '');
                 $('#editCredential-url').val(url ? url : '');
                 $('#editCredential-username').val(username ? username : '');
                 $('#editCredential-password').val(password ? password : '');
                 $('#editCredential-key').val(credentialKey ? credentialKey : '');
                 $('#editCredentialModal').modal('show');
-            }
+            } */
      
             function showDeleteNoteModal(noteId) {
                 $('#deleteNoteId').val(noteId ? noteId : '');
@@ -288,14 +320,18 @@
             }
             
             function showUpdateNoteModal(noteId, noteTitle, noteMessage) {
-            	console.log("show edit note modal")
-            	console.log(noteId)
-            	console.log(noteTitle)
-            	console.log(noteMessage)
                	$("#note-id").val(noteId ? noteId : '');
             	$("#note-update-title").val(noteTitle ? noteTitle : '');
             	$("#note-update-description").val(noteMessage ? noteMessage : '');
             	$('#noteUpdateModal').modal('show')
+            }
+            function showUpdateCredentialModal(credentialId, url, username, password){
+            	console.log("edit credential")
+            	$('#credential-id-update').val(credentialId ? credentialId : '');
+                $('#credential-url-update').val(url ? url : '');
+                $('#credential-username-update').val(username ? username : '');
+                $('#credential-password-update').val(password ? password : '');
+                $('#credentialModalUpdate').modal('show');
             }
         </script>
     </body>

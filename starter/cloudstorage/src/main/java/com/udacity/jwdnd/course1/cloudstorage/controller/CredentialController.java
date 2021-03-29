@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
+import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 
 @Controller
@@ -22,10 +23,13 @@ import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 public class CredentialController {
 	private UserService userService;
 	private CredentialService credentialService;
-	public CredentialController(UserService userService, CredentialService credentialService) {
+	private EncryptionService encryptionService;
+	
+	public CredentialController(UserService userService, CredentialService credentialService, EncryptionService encryptionService) {
 		super();
 		this.userService = userService;
 		this.credentialService = credentialService;
+		this.encryptionService = encryptionService;
 	}
 	
 	
@@ -48,18 +52,31 @@ public class CredentialController {
 	}
 
 
-    @PutMapping()
-    public String updateCredentials(@ModelAttribute Credential credential) {
-        credentialService.updateCredential(credential);
-        return "redirect:/home";
-    }
+//    @PutMapping()
+//    public String updateCredentials(@ModelAttribute Credential credential) {
+//        credentialService.updateCredential(credential);
+//        return "redirect:/home";
+//    }
     
 	@PostMapping()
-	public String addCredential(Credential credential,
+	public String addCredential(
+			@ModelAttribute Credential credential,
 			Authentication authendication,
 			Model model
 			) {
 		this.credentialService.addCredential(credential, authendication.getName());
-		return "redirect:/result?success";
+		return "redirect:/home";
+	}
+	@PostMapping("/update")
+	public String updateCredential(
+			@ModelAttribute Credential credential,
+			Authentication authentication) {
+		System.out.println("hit update credential endpoint");
+		System.out.println(credential.getUrl());
+//		credential.setKey(encryptionService.generateKey());
+		System.out.println(credential.getKey());
+		this.credentialService.updateCredential(credential, authentication.getName());
+		
+		return "redirect:/home";
 	}
 }
