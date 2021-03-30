@@ -178,7 +178,6 @@
                                         <th style="width: 35%" scope="col">URL</th>
                                         <th style="width: 20%" scope="col">Username</th>
                                         <th style="width: 25%" scope="col">Password</th>
-                                         <th style="width: 25%" scope="col">Password</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -189,13 +188,12 @@
                                         th:url="${credential.url}"
                                         th:username="${credential.username}"
                                         th:password="${encryption.decryptValue(credential.password, credential.key)}"
-                                        th:attr="onclick=|showUpdateCredentialModal('${credential.credentialId}','${credential.url}','${credential.username}','${encryption.decryptValue(credential.password, credential.key)}')|">Edit</button>
+                                        th:attr="onclick=|showUpdateCredentialModal('${credential.credentialId}','${credential.url}','${credential.username}','${encryption.decryptValue(credential.password, credential.key)}','${credential.key}')|">Edit</button>
                                         <a class="btn btn-danger" th:href="@{/credentials/delete/{credentialId}(credentialId=${credential.credentialId})}">Delete</a>
                                     </td>
                                     <th scope="row" th:text="${credential.url}"></th>
                                     <td th:text="${credential.username}"></td>
                                     <td th:text="${credential.password}"></td>
-                                     <td th:text="${credential.key}"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -249,6 +247,7 @@
                                     <div class="modal-body">
                                         <form action="#" method="POST" th:action="@{/credentials/update}" th:object="${credential}">
                                             <input type="hidden" name="credentialId" id="credential-id-update">
+                                            <input type="hidden" name="key" id="credential-key-update">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url-update" maxlength="100">
@@ -325,9 +324,10 @@
             	$("#note-update-description").val(noteMessage ? noteMessage : '');
             	$('#noteUpdateModal').modal('show')
             }
-            function showUpdateCredentialModal(credentialId, url, username, password){
+            function showUpdateCredentialModal(credentialId, url, username, password, key){
             	console.log("edit credential")
             	$('#credential-id-update').val(credentialId ? credentialId : '');
+            	$('#credential-key-update').val(key ? key : '');
                 $('#credential-url-update').val(url ? url : '');
                 $('#credential-username-update').val(username ? username : '');
                 $('#credential-password-update').val(password ? password : '');
