@@ -35,7 +35,6 @@ public class SignupController {
 // if user doesnt exist in database, sign user up!
         if (signupError == null) {
             int rowsAdded = userService.addUser(user);
-            System.out.println(rowsAdded);
             if (rowsAdded < 0) {
                 signupError = "There was an error signing you up. Please try again.";
             }
