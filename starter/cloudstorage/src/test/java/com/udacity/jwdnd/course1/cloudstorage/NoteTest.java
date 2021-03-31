@@ -4,8 +4,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +15,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -21,6 +24,8 @@ import java.time.Duration;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class NoteTest {
 	@LocalServerPort
 	private int port;
@@ -80,16 +85,16 @@ public class NoteTest {
 		this.webDriverWait.until(ExpectedConditions.elementToBeClickable(editButton));
 		editButton.click();
 		
-		WebElement noteTitleField = this.driver.findElement(By.id("note-title"));		
+		WebElement noteTitleField = this.driver.findElement(By.id("note-update-title"));		
 		this.webDriverWait.until(ExpectedConditions.visibilityOf(noteTitleField));
 		noteTitleField.clear();
 		noteTitleField.sendKeys("test 2");
 		
-		WebElement noteDescriptionField = this.driver.findElement(By.id("note-description"));		
+		WebElement noteDescriptionField = this.driver.findElement(By.id("note-update-description"));		
 		noteDescriptionField.clear();
 		noteDescriptionField.sendKeys("test 2 description");
 		
-		WebElement noteForm = this.driver.findElement(By.id("note-form"));
+		WebElement noteForm = this.driver.findElement(By.id("note-update-form"));
 		noteForm.submit();
 		this.goToHomePage();
 		Assertions.assertDoesNotThrow(() -> {
