@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
+import com.udacity.jwdnd.course1.cloudstorage.model.User;
 
 @Service
 public class FileService {
@@ -47,8 +48,9 @@ public class FileService {
 		return fileMapper.insert(file);
 	}
 	
-	public File getFile(String fileName) {
-		return fileMapper.getFile(fileName);
+	public File getFile(String fileName, String username) {
+		User user = this.userMapper.getUserByName(username);
+		return fileMapper.getFileByUser(fileName, user.getuserId());
 	}
 	public List<File> getFileListing(int userId) {
 		return fileMapper.getFileListings(userId);

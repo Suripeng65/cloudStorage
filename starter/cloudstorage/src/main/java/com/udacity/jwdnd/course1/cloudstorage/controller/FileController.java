@@ -65,7 +65,7 @@ public class FileController {
 		if(fileUpload.isEmpty()) {
 			uploadError = "Empty file!";
 			return "redirect:/result?error";
-		}else if(this.fileService.getFile(fileName) !=  null) {
+		}else if(this.fileService.getFile(fileName, authentication.getName()) !=  null) {
 			uploadError = "File already exists!";
 			redirectAttributes.addFlashAttribute("ifError", true);
             redirectAttributes.addFlashAttribute("errorMessage", uploadError);

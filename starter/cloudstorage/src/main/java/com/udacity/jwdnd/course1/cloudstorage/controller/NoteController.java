@@ -1,5 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
+import java.sql.SQLException;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +42,16 @@ public class NoteController {
 	public String addNote(@ModelAttribute("note") Note note, Authentication authentication,
 			RedirectAttributes redirectAttributes,
 			Model model) {
-		noteService.addNote(note, authentication.getName());
+		
+		try {
+			noteService.addNote(note, authentication.getName());
+					
+		}catch(Exception e) {
+			redirectAttributes.addFlashAttribute("ifError", true);
+            redirectAttributes.addFlashAttribute("errorMessage", "Note character exceed limit");
+            return "redirect:/home";
+		}
+//		noteService.addNote(note, authentication.getName());
 //		int userid = getUserId(authentication);
 //		User user = this.userService.getUserByName(authentication.getName());
 //		if(note.getNoteId() != null) {

@@ -69,7 +69,7 @@ class CloudStorageApplicationTests {
 		inputUsername.sendKeys(userName);
 		inputPassword = driver.findElement(By.id("inputPassword"));
 		inputPassword.sendKeys(password);
-		WebElement loginButton = driver.findElement(By.id("signup"));
+		WebElement loginButton = driver.findElement(By.id("login-btn"));
 		loginButton.click();
 		Assertions.assertEquals("Home", driver.getTitle());
 		
