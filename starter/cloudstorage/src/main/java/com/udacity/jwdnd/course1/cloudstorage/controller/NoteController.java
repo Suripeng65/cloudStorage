@@ -38,6 +38,7 @@ public class NoteController {
 	
 	@PostMapping("/note")
 	public String addNote(@ModelAttribute("note") Note note, Authentication authentication,
+			RedirectAttributes redirectAttributes,
 			Model model) {
 		noteService.addNote(note, authentication.getName());
 //		int userid = getUserId(authentication);
@@ -50,7 +51,8 @@ public class NoteController {
 //			model.addAttribute("note", noteService.getNoteListByUser(user.getuserId()));
 //		}
 //		
-//		model.addAttribute("success", true);
+		redirectAttributes.addFlashAttribute("success", true);
+		redirectAttributes.addFlashAttribute("successMessage", "Note Added!");
 		return "redirect:/home";
 	}
 //	
@@ -93,10 +95,13 @@ public class NoteController {
     @PostMapping("/update")
     public String updateNote(
     		@ModelAttribute Note note, 
-    		Authentication authentication) {
+    		Authentication authentication,
+    		RedirectAttributes redirectAttributes) {
     	System.out.println("hit update endpoint");
     	System.out.println(note.getNoteTitle());
         noteService.updateNote(note, authentication.getName());
+        redirectAttributes.addFlashAttribute("success", true);
+		redirectAttributes.addFlashAttribute("successMessage", "Note Updated!");
         return "redirect:/home";
     }
 	

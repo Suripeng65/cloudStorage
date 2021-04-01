@@ -29,6 +29,9 @@
 		        <div id="error-msg" th:if="${ifError}" class="alert alert-danger">
 		            <span th:text="${errorMessage}"></span>
 		        </div>
+		        <div th:if="${fileSizeErrorMesage}" class="alert alert-danger">
+		         <span>File size exceed limit!</span>
+		        </div>
                 <div class="tab-content" id="nav-tabContent">
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
                         <form 

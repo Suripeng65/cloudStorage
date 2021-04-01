@@ -62,21 +62,26 @@ public class CredentialController {
 	public String addCredential(
 			@ModelAttribute Credential credential,
 			Authentication authendication,
+			RedirectAttributes redirectAttributes,
 			Model model
 			) {
 		this.credentialService.addCredential(credential, authendication.getName());
+		redirectAttributes.addFlashAttribute("success", true);
+		redirectAttributes.addFlashAttribute("successMessage", "Credential added");
 		return "redirect:/home";
 	}
 	@PostMapping("/update")
 	public String updateCredential(
 			@ModelAttribute Credential credential,
+			RedirectAttributes redirectAttributes,
 			Authentication authentication) {
 		System.out.println("hit update credential endpoint");
 		System.out.println(credential.getUrl());
 //		credential.setKey(encryptionService.generateKey());
 		System.out.println(credential.getKey());
 		this.credentialService.updateCredential(credential, authentication.getName());
-		
+		redirectAttributes.addFlashAttribute("success", true);
+		redirectAttributes.addFlashAttribute("successMessage", "Credential updated");
 		return "redirect:/home";
 	}
 }

@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.core.io.ByteArrayResource;
@@ -50,16 +52,24 @@ public class FileController {
 	}
 	
 	@PostMapping("/upload-file")
-	public String uploadFile( MultipartFile fileUpload, Authentication authentication, Model model) {
+	public String uploadFile( MultipartFile fileUpload, Authentication authentication, Model model,
+			RedirectAttributes redirectAttributes) {		
+		if((fileUpload.getSize() > 5242880)) {
+			model.addAttribute("error", "File size exceed maximum");
+			throw new MaxUploadSizeExceededException(fileUpload.getSize());
+//			return "redirect:/result?error";
+		}
 		String uploadError = null;
 		User user = this.userService.getUserByName(authentication.getName());
 		String fileName = fileUpload.getOriginalFilename();
-		
 		if(fileUpload.isEmpty()) {
 			uploadError = "Empty file!";
 			return "redirect:/result?error";
 		}else if(this.fileService.getFile(fileName) !=  null) {
 			uploadError = "File already exists!";
+			redirectAttributes.addFlashAttribute("ifError", true);
+            redirectAttributes.addFlashAttribute("errorMessage", uploadError);
+			return "redirect:/home";
 		}else {
 			try {
 				this.fileService.addFile(fileUpload, user.getuserId());
