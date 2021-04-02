@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,16 +33,19 @@ public class CredentialTest {
 	
 	@BeforeAll
 	static void beforeAll() {
-		WebDriverManager.chromedriver().setup();
+//		WebDriverManager.chromedriver().setup();
 	}
 	
 	@BeforeEach
 	public void beforeEach() throws InterruptedException{
-		this.driver = new ChromeDriver();
+//		this.driver = new ChromeDriver();
+		this.driver = new SafariDriver();
 		this.webDriverWait = new WebDriverWait(driver, 500);
 		this.signupAndLogin();
 		this.insertNewCredential();
-		Thread.sleep(1000);
+		this.goToHomePage();
+		Thread.sleep(2000);
+		System.out.println("done with before each");
 	}
 	
 	@AfterEach
@@ -50,12 +54,16 @@ public class CredentialTest {
 			driver.quit();
 		}
 	}
+
+
 	
 	@Test
 	@Order(1)
 	public void createAndDeleteCredential() throws InterruptedException{
+		System.out.println("start testing delete");
+		
 		Assertions.assertDoesNotThrow(() -> {
-			this.driver.findElement(By.xpath("//th[text()='www.google.com']"));
+			this.driver.findElement(By.xpath("//table[@id='credentialTable']/tbody/tr/th[text()='www.google.com']"));
 			
 		});
 		
@@ -86,24 +94,25 @@ public class CredentialTest {
 		WebElement credentialUrl = this.driver.findElement(By.id("credential-url-update"));		
 		this.webDriverWait.until(ExpectedConditions.visibilityOf(credentialUrl));
 		credentialUrl.clear();
-		credentialUrl.sendKeys("abc");
+		credentialUrl.sendKeys("www.newurl.com");
 		
 		WebElement credentialUsername = this.driver.findElement(By.id("credential-username-update"));		
 		credentialUsername.clear();
-		credentialUsername.sendKeys("test 2 description");
+		credentialUsername.sendKeys("updateKey");
 		
 		WebElement credentialForm = this.driver.findElement(By.id("credential-update-form"));
 		credentialForm.submit();
 		this.goToHomePage();
 		Assertions.assertDoesNotThrow(() -> {
-			this.driver.findElement(By.xpath("//th[text()='test 2']"));
-			this.driver.findElement(By.xpath("//td[text()='test 2 description']"));
+			this.driver.findElement(By.xpath("//th[text()='www.newurl.com']"));
+			this.driver.findElement(By.xpath("//td[text()='updateKey']"));
 		});
 		
 	}
 	
-	private void goToHomePage() {
-		driver.get("http://localhost:" + this.port + "/home");
+	private void goToHomePage(){
+		this.driver.get("http://localhost:" + this.port + "/home");
+		System.out.println("refresh home page");
 		WebElement credentialTab = this.driver.findElement(By.id("nav-credentials-tab"));
 		this.webDriverWait.until(ExpectedConditions.elementToBeClickable(credentialTab));
 		credentialTab.click();
@@ -122,13 +131,13 @@ public class CredentialTest {
 		WebElement urlInput = this.driver.findElement(By.id("credential-url"));		
 		this.webDriverWait.until(ExpectedConditions.visibilityOf(urlInput));
 		urlInput.clear();
-		urlInput.sendKeys("www.test.com");
+		urlInput.sendKeys("www.google.com");
 		
 		WebElement credentialUsername = this.driver.findElement(By.id("credential-username"));		
-		credentialUsername.sendKeys("test username");
+		credentialUsername.sendKeys("testUsername");
 		
 		WebElement passwordInput = this.driver.findElement(By.id("credential-password"));
-		passwordInput.sendKeys("testkey");
+		passwordInput.sendKeys("testKey");
 		
 		WebElement credentialForm = this.driver.findElement(By.id("credential-form"));
 		credentialForm.submit();
@@ -136,38 +145,36 @@ public class CredentialTest {
 		this.goToHomePage();
 	}
 	
-	@Test
 	private void signupAndLogin() throws InterruptedException{
 		this.signup();
 		this.login();
 	}
 	
 	private void signup() throws InterruptedException{
-		//test signup
 		driver.get("http://localhost:" + this.port + "/signup");
 		WebElement inputFirstName = driver.findElement(By.id("inputFirstName"));
-		inputFirstName.sendKeys("test");
+		inputFirstName.sendKeys("testFirstname");
 		WebElement inputLastName = driver.findElement(By.id("inputLastName"));
-		inputLastName.sendKeys("test");
+		inputLastName.sendKeys("testLastname");
 		WebElement inputUsername = driver.findElement(By.id("inputUsername"));
-		inputUsername.sendKeys("test1234");
+		inputUsername.sendKeys("testUser1234");
 		WebElement inputPassword = driver.findElement(By.id("inputPassword"));
-		inputPassword.sendKeys("test1234");
+		inputPassword.sendKeys("testPassword1234");
 		WebElement signupBtn = driver.findElement(By.id("signupBtn"));
 		signupBtn.click();
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 
 	}
 	private void login() throws InterruptedException{
-		//test login
+
 		driver.get("http://localhost:" + this.port + "/login");
 		WebElement inputUsername = driver.findElement(By.id("inputUsername"));
-		inputUsername.sendKeys("test");
+		inputUsername.sendKeys("testUser1234");
 		WebElement inputPassword = driver.findElement(By.id("inputPassword"));
-		inputPassword.sendKeys("test1234");
+		inputPassword.sendKeys("testPassword1234");
 		WebElement loginButton = driver.findElement(By.id("login-btn"));
 		loginButton.click();
-		Assertions.assertEquals("Login", driver.getTitle());
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 	}
+	
 }

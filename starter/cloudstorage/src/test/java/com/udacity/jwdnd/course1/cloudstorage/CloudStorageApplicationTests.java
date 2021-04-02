@@ -80,8 +80,7 @@ class CloudStorageApplicationTests {
 		WebElement logoutButton = driver.findElement(By.id("logout-btn"));
 		logoutButton.click();
 		Thread.sleep(3000);
-		String j = driver.getTitle();
-		 System.out.println("Your page title Is : "+j);
+		System.out.println("Your page title Is : "+driver.getTitle());
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
