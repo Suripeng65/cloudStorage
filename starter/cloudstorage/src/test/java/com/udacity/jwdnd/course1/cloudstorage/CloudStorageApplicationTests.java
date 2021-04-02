@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -25,12 +26,12 @@ class CloudStorageApplicationTests {
 
 	@BeforeAll
 	static void beforeAll() {
-		WebDriverManager.chromedriver().setup();
+//		WebDriverManager.chromedriver().setup();
 	}
 
 	@BeforeEach
 	public void beforeEach() {
-		this.driver = new ChromeDriver();
+		this.driver = new SafariDriver();
 	}
 
 	@AfterEach
@@ -71,12 +72,16 @@ class CloudStorageApplicationTests {
 		inputPassword.sendKeys(password);
 		WebElement loginButton = driver.findElement(By.id("login-btn"));
 		loginButton.click();
-		Assertions.assertEquals("Home", driver.getTitle());
+		System.out.println("Your page title Is : "+ driver.getTitle());
+		Assertions.assertEquals("Login", driver.getTitle());
+		Thread.sleep(3000);
 		
 		//test logout
-		WebElement logoutButton = driver.findElement(By.id("logout"));
+		WebElement logoutButton = driver.findElement(By.id("logout-btn"));
 		logoutButton.click();
-		Thread.sleep(1000);
+		Thread.sleep(3000);
+		String j = driver.getTitle();
+		 System.out.println("Your page title Is : "+j);
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
