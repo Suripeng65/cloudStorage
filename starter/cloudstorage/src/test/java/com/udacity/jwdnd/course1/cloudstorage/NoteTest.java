@@ -144,32 +144,30 @@ public class NoteTest {
 	}
 	
 	private void signup() throws InterruptedException{
-		//test signup
 		driver.get("http://localhost:" + this.port + "/signup");
 		WebElement inputFirstName = driver.findElement(By.id("inputFirstName"));
-		inputFirstName.sendKeys("test");
+		inputFirstName.sendKeys("testFirstname");
 		WebElement inputLastName = driver.findElement(By.id("inputLastName"));
-		inputLastName.sendKeys("test");
+		inputLastName.sendKeys("testLastname");
 		WebElement inputUsername = driver.findElement(By.id("inputUsername"));
-		inputUsername.sendKeys("test1234");
+		inputUsername.sendKeys("testUser1234");
 		WebElement inputPassword = driver.findElement(By.id("inputPassword"));
-		inputPassword.sendKeys("test1234");
+		inputPassword.sendKeys("testPassword1234");
 		WebElement signupBtn = driver.findElement(By.id("signupBtn"));
 		signupBtn.click();
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 
 	}
 	private void login() throws InterruptedException{
-		//test login
+
 		driver.get("http://localhost:" + this.port + "/login");
 		WebElement inputUsername = driver.findElement(By.id("inputUsername"));
-		inputUsername.sendKeys("test");
+		inputUsername.sendKeys("testUser1234");
 		WebElement inputPassword = driver.findElement(By.id("inputPassword"));
-		inputPassword.sendKeys("test1234");
+		inputPassword.sendKeys("testPassword1234");
 		WebElement loginButton = driver.findElement(By.id("login-btn"));
 		loginButton.click();
-		Assertions.assertEquals("Login", driver.getTitle());
-		Thread.sleep(1000);
+		Thread.sleep(2000);
 	}
 
 }

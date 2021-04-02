@@ -40,7 +40,7 @@ public class CredentialTest {
 	public void beforeEach() throws InterruptedException{
 //		this.driver = new ChromeDriver();
 		this.driver = new SafariDriver();
-		this.webDriverWait = new WebDriverWait(driver, 500);
+		this.webDriverWait = new WebDriverWait(driver, 5);
 		this.signupAndLogin();
 		this.insertNewCredential();
 		this.goToHomePage();
