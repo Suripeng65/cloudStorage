@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,6 +11,7 @@ import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.openqa.selenium.NoSuchElementException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
@@ -23,6 +25,7 @@ class CloudStorageApplicationTests {
 	private static String lastName = "checkLastName";
 	private static String userName = "testusername";
 	private static String password = "test1234";
+	private JavascriptExecutor js;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -32,6 +35,8 @@ class CloudStorageApplicationTests {
 	@BeforeEach
 	public void beforeEach() {
 		this.driver = new ChromeDriver();
+		this.webDriverWait = new WebDriverWait(driver, 3);
+		this.js = (JavascriptExecutor) driver;
 	}
 
 	@AfterEach
@@ -48,8 +53,7 @@ class CloudStorageApplicationTests {
 	}
 	
 	@Test
-	public void newUserSignupLoginLogoutTest() throws InterruptedException{
-		WebDriverWait wait = new WebDriverWait(driver, 30);
+	public void newUserSignupLoginLogoutTest(){
 		
 		//test signup
 		driver.get("http://localhost:" + this.port + "/signup");
@@ -62,7 +66,7 @@ class CloudStorageApplicationTests {
 		WebElement inputPassword = driver.findElement(By.id("inputPassword"));
 		inputPassword.sendKeys(password);
 		WebElement signupBtn = driver.findElement(By.id("signupBtn"));
-		signupBtn.click();
+		js.executeScript("arguments[0].click();", signupBtn);
 		
 		//test login
 		driver.get("http://localhost:" + this.port + "/login");
@@ -71,15 +75,14 @@ class CloudStorageApplicationTests {
 		inputPassword = driver.findElement(By.id("inputPassword"));
 		inputPassword.sendKeys(password);
 		WebElement loginButton = driver.findElement(By.id("login-btn"));
-		loginButton.click();
+		js.executeScript("arguments[0].click();", loginButton);
 		System.out.println("Your page title Is : "+ driver.getTitle());
 		Assertions.assertEquals("Home", driver.getTitle());
-		Thread.sleep(3000);
 		
 		//test logout
 		WebElement logoutButton = driver.findElement(By.id("logout-btn"));
-		logoutButton.click();
-		Thread.sleep(3000);
+		js.executeScript("arguments[0].click();", logoutButton);
+
 		System.out.println("Your page title Is : "+driver.getTitle());
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
