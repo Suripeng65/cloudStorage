@@ -26,12 +26,12 @@ class CloudStorageApplicationTests {
 
 	@BeforeAll
 	static void beforeAll() {
-//		WebDriverManager.chromedriver().setup();
+		WebDriverManager.chromedriver().setup();
 	}
 
 	@BeforeEach
 	public void beforeEach() {
-		this.driver = new SafariDriver();
+		this.driver = new ChromeDriver();
 	}
 
 	@AfterEach
@@ -73,7 +73,7 @@ class CloudStorageApplicationTests {
 		WebElement loginButton = driver.findElement(By.id("login-btn"));
 		loginButton.click();
 		System.out.println("Your page title Is : "+ driver.getTitle());
-		Assertions.assertEquals("Login", driver.getTitle());
+		Assertions.assertEquals("Home", driver.getTitle());
 		Thread.sleep(3000);
 		
 		//test logout
