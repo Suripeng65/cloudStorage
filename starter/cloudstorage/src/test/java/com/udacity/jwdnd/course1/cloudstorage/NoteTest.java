@@ -1,5 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,20 +10,16 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-
-import java.time.Duration;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -32,6 +29,7 @@ public class NoteTest {
 	
 	private WebDriver driver;
 	private WebDriverWait webDriverWait;
+	private JavascriptExecutor js;
 	
 	@BeforeAll
 	static void beforeAll() {
@@ -41,7 +39,8 @@ public class NoteTest {
 	@BeforeEach
 	public void beforeEach() throws InterruptedException{
 		this.driver = new ChromeDriver();
-		this.webDriverWait = new WebDriverWait(driver, 500);
+		this.webDriverWait = new WebDriverWait(driver, 5);
+		this.js = (JavascriptExecutor) driver;
 		this.signupAndLogin();
 		this.insertNewNote();
 		this.goToHomePage();
@@ -56,50 +55,49 @@ public class NoteTest {
 	
 	@Test
 	@Order(1)
-	public void createAndDeleteNote() throws InterruptedException{
+	public void createAndDeleteNote(){
 		Assertions.assertDoesNotThrow(() -> {
-			this.driver.findElement(By.xpath("//th[text()='Test Created']"));
-			this.driver.findElement(By.xpath("//td[text()='this is a test']"));
+			this.driver.findElement(By.xpath("//th[text()='Test Title Created']"));
+			this.driver.findElement(By.xpath("//td[text()='Test Description Created']"));
 		});
+		
 		WebElement deleteButton = this.driver.findElement(
-				By.xpath("//*[@id='userTable]/tbody/tr/td[1]/a"));
+				By.xpath("//*[@id='userTable']/tbody/tr/td[1]/a"));
 		this.webDriverWait.until(ExpectedConditions.elementToBeClickable(deleteButton));
-		deleteButton.click();
+		js.executeScript("arguments[0].click();", deleteButton);
+		
 		this.goToHomePage();
+		
 		Assertions.assertThrows(NoSuchElementException.class, () -> {
-			this.driver.findElement(By.xpath("//th[text()='Test Created']"));
-			this.driver.findElement(By.xpath("//td[text()='this is a test']"));
+			this.driver.findElement(By.xpath("//th[text()='Test Title Created']"));
+			this.driver.findElement(By.xpath("//td[text()='Test Description Created']"));
 		});
 	}
 	
 	@Test
 	@Order(2)
-	public void updateNote() throws InterruptedException{
+	public void updateNote(){
 		Assertions.assertDoesNotThrow(() -> {
-			this.driver.findElement(By.xpath("//th[text()='Test Created']"));
-			this.driver.findElement(By.xpath("//td[text()='this is a test']"));
+			this.driver.findElement(By.xpath("//th[text()='Test Title Created']"));
+			this.driver.findElement(By.xpath("//td[text()='Test Description Created']"));
 		});
 		
 		WebElement editButton = this.driver.findElement(
-				By.xpath("//*[@id='userTable]/tbody/tr/td[1]/button"));
+				By.xpath("//*[@id='userTable']/tbody/tr/td[1]/button"));
 		this.webDriverWait.until(ExpectedConditions.elementToBeClickable(editButton));
-		editButton.click();
+		js.executeScript("arguments[0].click();", editButton);
 		
-		WebElement noteTitleField = this.driver.findElement(By.id("note-update-title"));		
-		this.webDriverWait.until(ExpectedConditions.visibilityOf(noteTitleField));
-		noteTitleField.clear();
-		noteTitleField.sendKeys("test 2");
-		
-		WebElement noteDescriptionField = this.driver.findElement(By.id("note-update-description"));		
-		noteDescriptionField.clear();
-		noteDescriptionField.sendKeys("test 2 description");
+		WebElement noteDescriptionField = this.driver.findElement(By.id("note-update-description"));
+		this.webDriverWait.until(ExpectedConditions.visibilityOf(noteDescriptionField));
+		js.executeScript("arguments[0].value='" + "Test Updated Note" + "';", noteDescriptionField);
 		
 		WebElement noteForm = this.driver.findElement(By.id("note-update-form"));
 		noteForm.submit();
+		
 		this.goToHomePage();
+		
 		Assertions.assertDoesNotThrow(() -> {
-			this.driver.findElement(By.xpath("//th[text()='test 2']"));
-			this.driver.findElement(By.xpath("//td[text()='test 2 description']"));
+			this.driver.findElement(By.xpath("//td[text()='Test Updated Note']"));
 		});
 		
 	}
@@ -108,66 +106,72 @@ public class NoteTest {
 		driver.get("http://localhost:" + this.port + "/home");
 		WebElement noteTab = this.driver.findElement(By.id("nav-notes-tab"));
 		this.webDriverWait.until(ExpectedConditions.elementToBeClickable(noteTab));
-		noteTab.click();
+		js.executeScript("arguments[0].click();", noteTab);
 	}
 	
 	private void insertNewNote() throws InterruptedException{
 		this.driver.get("http://localhost:" + this.port + "/home");
 		WebElement noteTab = this.driver.findElement(By.id("nav-notes-tab"));
 		this.webDriverWait.until(ExpectedConditions.elementToBeClickable(noteTab));
-		noteTab.click();
+		js.executeScript("arguments[0].click();", noteTab);
 		
 		WebElement noteCreationButton = this.driver.findElement(By.id("create-note"));	
-		Assertions.assertNotNull(noteCreationButton);
+//		Assertions.assertNotNull(noteCreationButton);
 		this.webDriverWait.until(ExpectedConditions.elementToBeClickable(noteCreationButton));
-		noteCreationButton.click();
+		js.executeScript("arguments[0].click();", noteCreationButton);
 		
 		WebElement noteTitleField = this.driver.findElement(By.id("note-title"));		
 		this.webDriverWait.until(ExpectedConditions.visibilityOf(noteTitleField));
-		noteTitleField.clear();
-		noteTitleField.sendKeys("test 2");
+		js.executeScript("arguments[0].value='" + "Test Title Created" + "';", noteTitleField);
 		
-		WebElement noteDescriptionField = this.driver.findElement(By.id("note-description"));		
-		noteDescriptionField.clear();
-		noteDescriptionField.sendKeys("test 2 description");
+		WebElement noteDescriptionField = this.driver.findElement(By.id("note-description"));
+		this.webDriverWait.until(ExpectedConditions.visibilityOf(noteDescriptionField));
+		js.executeScript("arguments[0].value='" + "Test Description Created" + "';", noteDescriptionField);
 		
 		WebElement noteForm = this.driver.findElement(By.id("note-form"));
-		Thread.sleep(1000);
 		noteForm.submit();
 		
 	}
 	
 	@Test
-	private void signupAndLogin() throws InterruptedException{
+	private void signupAndLogin() {
 		this.signup();
 		this.login();
 	}
 	
-	private void signup() throws InterruptedException{
+	private void signup() {
 		driver.get("http://localhost:" + this.port + "/signup");
+
 		WebElement inputFirstName = driver.findElement(By.id("inputFirstName"));
-		inputFirstName.sendKeys("testFirstname");
+		js.executeScript("arguments[0].value='" + "testFirstname" + "';", inputFirstName);
+
+
 		WebElement inputLastName = driver.findElement(By.id("inputLastName"));
-		inputLastName.sendKeys("testLastname");
+		js.executeScript("arguments[0].value='" + "testLastname" + "';", inputLastName);
+
+
 		WebElement inputUsername = driver.findElement(By.id("inputUsername"));
-		inputUsername.sendKeys("testUser1234");
+		js.executeScript("arguments[0].value='" + "testUser1234" + "';", inputUsername);
+
 		WebElement inputPassword = driver.findElement(By.id("inputPassword"));
-		inputPassword.sendKeys("testPassword1234");
+		js.executeScript("arguments[0].value='" + "testPassword1234" + "';", inputPassword);
+
+
 		WebElement signupBtn = driver.findElement(By.id("signupBtn"));
-		signupBtn.click();
-		Thread.sleep(2000);
-
+		js.executeScript("arguments[0].click();", signupBtn);
 	}
-	private void login() throws InterruptedException{
-
+	
+	private void login() {
 		driver.get("http://localhost:" + this.port + "/login");
+
 		WebElement inputUsername = driver.findElement(By.id("inputUsername"));
-		inputUsername.sendKeys("testUser1234");
+		js.executeScript("arguments[0].value='" + "testUser1234" + "';", inputUsername);
+
 		WebElement inputPassword = driver.findElement(By.id("inputPassword"));
-		inputPassword.sendKeys("testPassword1234");
+		js.executeScript("arguments[0].value='" + "testPassword1234" + "';", inputPassword);
+
 		WebElement loginButton = driver.findElement(By.id("login-btn"));
-		loginButton.click();
-		Thread.sleep(2000);
+		js.executeScript("arguments[0].click();", loginButton);
 	}
 
 }
