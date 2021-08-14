@@ -1,3 +1,5 @@
+# File and Information Management System
+
 This is an application to manage personal and file information, including the following three user-facing features:
 
 1. **Simple File Storage:** Upload/download/remove files
